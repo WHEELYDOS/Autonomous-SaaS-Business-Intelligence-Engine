@@ -264,24 +264,31 @@ The `action_type` field is an enum pinned to exactly what the Action Agent imple
 
 ## 🧪 Agent Testing Dashboard
 
-A standalone Streamlit UI for testing the three ML agents individually during
-development.  It imports the existing agent code directly — no logic is
-reimplemented.
+A standalone Streamlit UI for testing all five pipeline agents (User Behavior,
+Churn Prediction, Feature Analysis, Strategy Agent, Action Agent) individually
+and as a connected end-to-end pipeline during development.  It imports the
+existing agent code directly — no logic is reimplemented.
 
 ### Running the Dashboard
 
 ```bash
 # From the project root
 streamlit run testing_ui/app.py
+
+# Optional: set an LLM API key for Strategy Agent LLM-based reasoning
+# (falls back to deterministic heuristic engine if unset)
+OPENAI_API_KEY=sk-... streamlit run testing_ui/app.py
 ```
 
 ### Features
 
 | Feature | Details |
 |---------|---------|
-| **Agent selector** | Tabs for User Behavior, Churn Prediction, Feature Analysis |
+| **Agent selector** | Tabs for User Behavior, Churn Prediction, Feature Analysis, Strategy & Approvals, Full Pipeline |
 | **Data selection** | Full dataset, random sample of N customers, or a single `customer_id` |
 | **Structured output** | Cluster profiles table, PCA scatter, sortable risk table, survival curves, ATE chart with CIs |
+| **Strategy & Approvals** | Runs Strategy Agent against upstream outputs; shows justifications side-by-side with raw grounding data (risk scores, causal CIs); real Approve/Reject controls wired to the Action Agent (confirmed mocked) |
+| **Full Pipeline** | Runs all 5 agents in order on one input; shows each stage's output feeding into the next with schema-compatibility checks at handoff boundaries |
 | **Run metadata** | Records processed, wall-clock time |
 | **Error surfacing** | Agent errors appear as readable messages in the UI (not just terminal tracebacks) |
 
