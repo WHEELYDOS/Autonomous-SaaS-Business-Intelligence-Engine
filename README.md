@@ -1,53 +1,277 @@
-# Autonomous SaaS Business Intelligence Engine
+<div align="center">
 
-A source-agnostic, multi-agent ML pipeline for SaaS churn analysis. The engine maps any customer data source onto a single canonical schema, runs three classical ML/statistical agents, then feeds their structured outputs through an LLM-based Strategy Agent that produces ranked business recommendations for the Action Agent.
+# 🚀 Autonomous SaaS Business Intelligence Engine
+
+### AI-Powered Multi-Agent Churn Prevention Platform
+
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://python.org)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-2.0-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![LangChain](https://img.shields.io/badge/LangChain-LCEL-1C3C3C?logo=langchain&logoColor=white)](https://langchain.com)
+[![LangGraph](https://img.shields.io/badge/LangGraph-HITL-FF6F00)](https://langchain-ai.github.io/langgraph/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+
+A **source-agnostic, multi-agent ML pipeline** that autonomously analyses SaaS customer data, predicts churn risk, identifies causal retention drivers, generates ranked business recommendations via LLM reasoning, and executes approved actions — all through a sleek React dashboard with human-in-the-loop approval controls.
+
+---
+
+[Quick Start](#-quick-start) · [Architecture](#-architecture) · [Dashboard](#-dashboard) · [API Reference](#-api-reference) · [Tech Stack](#-tech-stack)
+
+</div>
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Architecture](#-architecture)
+- [Agents in Detail](#-agents-in-detail)
+- [Dashboard (Frontend)](#-dashboard)
+- [API Reference](#-api-reference)
+- [Dataset](#-dataset)
+- [Mathematical Background](#-mathematical-background)
+- [Quick Start](#-quick-start)
+- [Repository Structure](#-repository-structure)
+- [Adding a New Data Source](#-adding-a-new-data-source)
+- [Configuration](#%EF%B8%8F-configuration)
+- [Tech Stack](#-tech-stack)
+- [License](#-license)
+
+---
+
+## 🌟 Overview
+
+The **Autonomous SaaS BI Engine** is a full-stack intelligent system that transforms raw customer data into actionable churn prevention strategies — autonomously. The platform orchestrates **five specialised AI agents** in a pipeline:
+
+| # | Agent | Role | Method |
+|---|-------|------|--------|
+| 1 | **User Behavior** | Segment customers by behavioural patterns | DBSCAN clustering + autoencoder anomaly scoring |
+| 2 | **Churn Prediction** | Forecast individual revenue risk & survival timelines | Cox Proportional Hazards + Gradient Boosting |
+| 3 | **Feature Analysis** | Identify *causal* retention drivers | Double Machine Learning (LinearDML) |
+| 4 | **Strategy** | Synthesise insights into ranked recommendations | LLM reasoning (LangChain) with deterministic fallback |
+| 5 | **Action** | Execute approved recommendations safely | LangGraph stateful workflow with HITL approval |
+
+### Key Features
+
+- ✅ **Source-agnostic** — Adapter pattern maps any data source to a universal canonical schema
+- ✅ **Causal, not just correlational** — DML (Chernozhukov et al.) identifies features that *actually* drive retention
+- ✅ **LLM-powered strategy with guardrails** — Grounded reasoning with no hallucinated numbers; deterministic fallback when no API key is present
+- ✅ **Human-in-the-loop** — High-risk actions (e.g. billing discounts) require explicit approval; low-risk ones auto-execute
+- ✅ **Full-stack dashboard** — React 19 + Tailwind CSS 4 executive dashboard with real-time KPIs, charts, and approval controls
+- ✅ **Type-safe contracts** — Pydantic v2 schemas at every agent boundary
+- ✅ **Dual UI** — Streamlit for development/testing, React dashboard for production use
+
+---
 
 ## 🏗️ Architecture
 
 ```
-Data Sources -> Adapters -> Canonical Schema -> [Agent 1, Agent 2, Agent 3] -> Strategy Agent
-                                                                                    |
-                                                                              Action Agent
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        DATA INGESTION LAYER                                │
+│  Raw CSV ──► Adapter (telco_churn_adapter.py) ──► CanonicalRecord[]        │
+└──────────────────────────────┬──────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       ML AGENT PIPELINE                                     │
+│                                                                             │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐          │
+│  │  Agent 1:        │  │  Agent 2:        │  │  Agent 3:        │          │
+│  │  User Behavior   │  │  Churn Predict   │  │  Feature Anlysis │          │
+│  │  ─────────────   │  │  ─────────────   │  │  ─────────────   │          │
+│  │  DBSCAN +        │  │  Cox PH +        │  │  LinearDML       │          │
+│  │  Autoencoder     │  │  GradientBoost   │  │  (Causal)        │          │
+│  └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘          │
+│           └──────────────┬──────┴──────────────────────┘                    │
+│                          ▼                                                  │
+│  ┌──────────────────────────────────────────────────────────────┐           │
+│  │  Agent 4: Strategy Agent (LLM / Heuristic Fallback)         │           │
+│  │  Aggregates risk + causal evidence → Ranked Recommendations  │           │
+│  └──────────────────────────┬───────────────────────────────────┘           │
+│                             ▼                                               │
+│  ┌──────────────────────────────────────────────────────────────┐           │
+│  │  Agent 5: Action Agent (LangGraph)                           │           │
+│  │  classify_risk → approve/HITL → execute_tool → audit_log     │           │
+│  └──────────────────────────────────────────────────────────────┘           │
+└─────────────────────────────┬───────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       PRESENTATION LAYER                                    │
+│                                                                             │
+│  FastAPI Backend (/api/*) ◄──► React 19 Dashboard (Vite + Tailwind)        │
+│  SQLite run store              9 pages, KPI cards, charts, approve/reject   │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-| Agent | Purpose | Method |
-|-------|---------|--------|
-| **User Behavior** | Segment customers by behaviour | DBSCAN clustering + autoencoder anomaly scoring |
-| **Churn Prediction** | Forecast revenue risk | Cox Proportional Hazards + Gradient Boosting |
-| **Feature Analysis** | Causal effect of features on retention | Double Machine Learning (LinearDML) |
-| **Strategy** | Reason over upstream outputs, produce recommendations | LLM (LangChain) with deterministic heuristic fallback |
+### Data Flow
 
-All three agents read the canonical schema and return typed Pydantic outputs. They are wrapped as LangChain `RunnableLambda` instances for LCEL composability.
+```
+Raw Data → Adapter → CanonicalRecord[] → Agent 1,2,3 (parallel ML) → Strategy Agent → Action Agent
+                                                                                          │
+                                                   FastAPI ← JSON cache ← pipeline_output.json
+                                                      │
+                                                   React Dashboard (Vite)
+```
+
+All agents consume and produce **typed Pydantic models** — no raw dicts cross agent boundaries. Agents 1–3 are wrapped as LangChain `RunnableLambda` instances for LCEL composability.
 
 ---
 
-## 📊 Dataset: Telco Customer Churn
+## 🤖 Agents in Detail
 
-**Source:** `Dataset/WA_Fn-UseC_-Telco-Customer-Churn.csv` (copied to `data/raw/telco_churn.csv`)  
+### Agent 1 — User Behavior Segmentation
+
+| Property | Detail |
+|----------|--------|
+| **Input** | `list[CanonicalRecord]` |
+| **Output** | `UserBehaviorResult` (cluster profiles, anomalous clusters, per-customer assignments) |
+| **Clustering** | DBSCAN with auto-tuned ε (k-distance heuristic), `min_samples=10` |
+| **Anomaly Scoring** | MLPRegressor autoencoder (bottleneck architecture); reconstruction error = anomaly score |
+| **Anomaly Threshold** | Clusters with mean anomaly score > 1.5× median are flagged |
+| **Labelling** | Each cluster gets a human-readable label (e.g., *"New – Low-spend – Minimal-service"*) |
+
+### Agent 2 — Churn Prediction
+
+| Property | Detail |
+|----------|--------|
+| **Input** | `list[CanonicalRecord]` |
+| **Output** | `ChurnPredictionResult` (per-customer risk scores, survival curves, feature importances) |
+| **Survival Model** | Cox Proportional Hazards (`lifelines`) → personalised survival curves, C-index |
+| **Classifier** | Gradient Boosting Classifier (`scikit-learn`) → churn probability, feature importances |
+| **Risk Scoring** | Composite of Cox hazard + GBM probability |
+| **Churn Reasons** | Heuristic assignment: *price_sensitivity*, *low_engagement*, *dissatisfaction*, *competitor_risk* |
+
+### Agent 3 — Causal Feature Analysis
+
+| Property | Detail |
+|----------|--------|
+| **Input** | `list[CanonicalRecord]` |
+| **Output** | `FeatureAnalysisResult` (per-feature ATE with confidence intervals) |
+| **Method** | Double Machine Learning — `LinearDML` from Microsoft Research's `econml` |
+| **Nuisance Models** | Cross-fitted Gradient Boosting (Stage 1) |
+| **Significance** | Features where CI excludes zero are flagged as statistically significant |
+| **Ranking** | Sorted by absolute ATE magnitude |
+
+### Agent 4 — Strategy Agent
+
+| Property | Detail |
+|----------|--------|
+| **Input** | `UserBehaviorResult` + `ChurnPredictionResult` + `FeatureAnalysisResult` |
+| **Output** | `StrategyAgentResult` (ranked `SegmentRecommendation` list) |
+| **Reasoning** | LLM via LangChain's `init_chat_model` (provider-agnostic) |
+| **Fallback** | Deterministic heuristic engine when no API key is configured |
+| **Grounding** | All numbers come from upstream agents — LLM prompt forbids inventing statistics |
+| **Confidence** | Derived from CI width (narrow CI = high confidence), not LLM self-assessment |
+| **Impact** | `ATE × segment_size` = expected additional retained customers |
+
+**Action types** are constrained to exactly what the Action Agent implements:
+
+| Action Type | Tool | Risk Level |
+|-------------|------|------------|
+| `trigger_a_b_test` | GrowthBook experiment | Low (auto-approve) |
+| `apply_stripe_discount` | Stripe retention coupon | **High (requires HITL)** |
+| `send_cs_alert` | Slack/CRM notification | Low (auto-approve) |
+
+### Agent 5 — Action Agent (LangGraph)
+
+| Property | Detail |
+|----------|--------|
+| **Input** | `StrategyRecommendation` (mapped from Strategy Agent output) |
+| **Framework** | LangGraph `StateGraph` with human-in-the-loop |
+| **Workflow** | `classify_risk` → `auto_approve` / `human_review` → `execute_action` → `log_result` |
+| **Audit** | Every action logged to JSONL audit trail |
+| **Tools** | GrowthBook A/B tests, Stripe discounts, Slack CS alerts (mock implementations) |
+
+---
+
+## 🖥️ Dashboard
+
+The production frontend is a **React 19** single-page application built with **Vite 8**, **Tailwind CSS 4**, **Recharts 3**, and **TypeScript**.
+
+### Pages
+
+| Route | Page | Description |
+|-------|------|-------------|
+| `/` | **Overview** | Executive briefing with KPI cards (total MRR, at-risk accounts, MRR at risk, 90-day churn), AI intelligence briefing banner, 5-agent telemetry strip, risk distribution chart, segment health bars, top pending recommendations, anomaly alerts, recent actions table |
+| `/segments` | **Segments** | Cluster profiles with size, churn rate, anomaly flags, engagement trends |
+| `/churn-risk` | **Churn Risk** | Churn risk analysis with survival curves and expected cancellations |
+| `/accounts/:id` | **Customer Detail** | Individual deep-dive: risk gauge, survival curve, risk factors, matching recommendations |
+| `/feature-impact` | **Feature Impact** | ATE bar chart with confidence intervals and significance indicators |
+| `/recommendations` | **Recommendations** | Strategy Agent recommendations with approve/reject controls, justification text, urgency badges, and MRR impact estimates |
+| `/actions` | **Actions** | Action Agent execution log showing status, accounts affected, and early results |
+| `/pipeline` | **Pipeline** | Pipeline run metadata, agent-level timing breakdown, run history |
+| `/settings/:section?` | **Settings** | Mode (dry-run/live), approval requirements, risk thresholds, pipeline schedule |
+
+### Frontend Tech
+
+- **React 19** + **React Router 8** — Client-side routing with nested layouts
+- **Tailwind CSS 4** — Utility-first styling with dark mode
+- **Recharts 3** — Interactive charts (line, bar, scatter, radial)
+- **Lucide React** — Consistent iconography
+- **Mock fallback** — Full mock dataset enables frontend development without a running backend
+
+---
+
+## 📡 API Reference
+
+The **FastAPI** backend (`api/server.py`) serves pipeline results and manages the recommendation approval workflow.
+
+**Base URL:** `http://localhost:8000`  
+**Interactive Docs:** `http://localhost:8000/docs` (Swagger UI)
+
+### Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/status` | Health check + pipeline metadata |
+| `GET` | `/api/overview` | Executive KPIs (MRR, at-risk accounts, churn rate, risk distribution) |
+| `GET` | `/api/customers` | Paginated, sortable, filterable customer list with search |
+| `GET` | `/api/customers/{id}` | Individual customer detail with survival curve + recommendations |
+| `GET` | `/api/churn-risk` | Churn risk data: survival curves, expected cancellations, reasons |
+| `GET` | `/api/segments` | Cluster summaries with aggregate churn risk |
+| `GET` | `/api/features` | Ranked causal feature impacts from DML analysis |
+| `GET` | `/api/recommendations` | Strategy recommendations with approval statuses |
+| `POST` | `/api/recommendations/decide` | Approve or reject a recommendation (idempotent, 409 on duplicates) |
+| `GET` | `/api/actions` | Action log and execution stats |
+| `POST` | `/api/actions/{id}/retry` | Retry a failed action |
+| `GET` | `/api/pipeline-metadata` | Pipeline run metadata including per-agent timing |
+| `GET` | `/api/runs` | Run history from SQLite (last 20) |
+| `POST` | `/api/refresh` | Reload pipeline output from disk |
+| `GET` | `/api/settings` | All settings (mode, thresholds, schedule) |
+| `POST` | `/api/settings/mode` | Change mode (`dry-run` / `live`, live requires confirmation) |
+| `POST` | `/api/settings/thresholds` | Update risk thresholds |
+| `POST` | `/api/settings/schedule` | Update pipeline schedule |
+| `GET` | `/api/anomalies` | Anomaly alerts from the latest pipeline run |
+
+**Persistence:** SQLite database (`data/runs.db`) stores run history and settings. Pipeline results are cached as JSON (`data/pipeline_output.json`).
+
+---
+
+## 📊 Dataset
+
+**Source:** [IBM Telco Customer Churn](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)  
+**File:** `Dataset/WA_Fn-UseC_-Telco-Customer-Churn.csv` → mapped to `data/raw/telco_churn.csv`  
 **Size:** 7,043 customers × 21 columns  
-**Churn rate:** 26.5% (1,869 churned / 5,174 active)  
-**Type:** Telco-style with a **direct churn label** — no proxy construction needed.
+**Churn Rate:** 26.5% (1,869 churned / 5,174 active)
 
-### Column Mapping
+### Column Mapping (Raw → Canonical)
 
 | Canonical Field | Source Column(s) | Mapping Logic |
 |----------------|-----------------|---------------|
 | `customer_id` | `customerID` | Direct |
 | `signup_date` | Synthetic | `2023-12-31 − (tenure × 30 days)` |
-| `plan_tier` | `Contract` | Direct: "Month-to-month" / "One year" / "Two year" |
+| `plan_tier` | `Contract` | Direct: Month-to-month / One year / Two year |
 | `mrr` | `MonthlyCharges` | Direct (Monthly Recurring Revenue) |
-| `billing_cycle` | `Contract` | "monthly" / "annual" / "biennial" |
-| `payment_status` | `PaymentMethod` | "auto_bank", "auto_card", "manual_mail", "manual_electronic" |
+| `billing_cycle` | `Contract` | monthly / annual / biennial |
+| `payment_status` | `PaymentMethod` | auto_bank, auto_card, manual_mail, manual_electronic |
 | `tenure_days` | `tenure` | `tenure × 30` (months → days) |
-| `last_activity_date` | Synthetic | Reference date (2023-12-31) |
-| `support_interactions` | `TechSupport` | 1 if "Yes", 0 otherwise (binary proxy) |
-| `satisfaction_score` | — | `None` (not available in this source) |
+| `support_interactions` | `TechSupport` | 1 if "Yes", 0 otherwise |
 | `churn_flag` | `Churn` | "Yes" → True, "No" → False |
-| `churn_date` | Synthetic | Reference date for churned customers |
+| `service_features` | 15 columns | gender, SeniorCitizen, Partner, Dependents, all service columns |
 
-**Additional features** (in `service_features` dict): `gender`, `SeniorCitizen`, `Partner`, `Dependents`, `PhoneService`, `MultipleLines`, `InternetService`, `OnlineSecurity`, `OnlineBackup`, `DeviceProtection`, `StreamingTV`, `StreamingMovies`, `PaperlessBilling`, `TotalCharges`, `PaymentMethod`.
-
-**Data quality:** 11 rows have blank `TotalCharges` (all `tenure == 0`). Imputed as `0.0`.
+**Data Quality:** 11 rows with blank `TotalCharges` (all `tenure == 0`), imputed as `0.0`.
 
 ---
 
@@ -57,84 +281,76 @@ All three agents read the canonical schema and return typed Pydantic outputs. Th
 
 The Cox PH model estimates the instantaneous risk (hazard) of churn at time *t*:
 
-```
-h(t | X) = h₀(t) · exp(β₁X₁ + β₂X₂ + … + βₚXₚ)
-```
+$$h(t \mid X) = h_0(t) \cdot \exp(\beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_p X_p)$$
 
-- **h₀(t)** is the baseline hazard — a non-parametric function shared by all customers.
-- **β** are log-hazard ratios: a positive β means the feature *increases* churn risk.
-- **Survival function**: `S(t | X) = exp(−H₀(t) · exp(Xβ))` gives the probability of surviving past time *t*.
-- **C-index** (concordance) measures model quality — analogous to AUC for time-to-event data. A C-index of 0.5 is random; above 0.7 is good.
+- $h_0(t)$ is the **baseline hazard** — a non-parametric function shared by all customers
+- $\beta$ are **log-hazard ratios**: positive β → increased churn risk
+- **Survival function**: $S(t \mid X) = \exp(-H_0(t) \cdot \exp(X\beta))$ — probability of surviving past time *t*
+- **C-index** (concordance): Analogous to AUC for time-to-event data (>0.7 is good)
 
-**In plain language:** Instead of asking "will this customer churn?" (binary), Cox PH asks "when will they churn?" and gives a personalised survival curve. The model says: "Customer A has a 73% chance of still being active in 6 months; Customer B has only 28%."
+> **In plain language:** Instead of "will this customer churn?" (binary), Cox PH asks "**when** will they churn?" and gives a personalised survival curve. e.g. "Customer A has a 73% chance of still being active in 6 months; Customer B only 28%."
 
 ### Double Machine Learning (Agent 3)
 
-DML (Chernozhukov et al., 2018) estimates the *causal* effect of a treatment *T* on an outcome *Y*, controlling for confounders *X*:
+DML (Chernozhukov et al., 2018) estimates the *causal* effect of treatment *T* on outcome *Y*, controlling for confounders *X*:
 
-```
-Stage 1 (Nuisance estimation, cross-fitted):
-    Ŷ = g(X)     →  residual: Ỹ = Y − Ŷ
-    T̂ = f(X)     →  residual: T̃ = T − T̂
+$$\text{Stage 1: } \hat{Y} = g(X), \quad \tilde{Y} = Y - \hat{Y}; \qquad \hat{T} = f(X), \quad \tilde{T} = T - \hat{T}$$
 
-Stage 2 (Causal parameter):
-    θ̂ = argmin_θ  Σ (Ỹ − θ · T̃)²
-```
+$$\text{Stage 2: } \hat{\theta} = \arg\min_\theta \sum (\tilde{Y} - \theta \cdot \tilde{T})^2$$
 
-- **Stage 1** removes the influence of confounders using flexible ML models (gradient boosting). The residuals Ỹ and T̃ represent the "unexplained" parts of outcome and treatment.
-- **Stage 2** estimates the Average Treatment Effect (ATE) θ from these residuals, with valid confidence intervals.
+- **Stage 1** removes confounder influence using flexible ML models (gradient boosting). Residuals represent the "unexplained" parts.
+- **Stage 2** estimates the **Average Treatment Effect (ATE)** θ from residuals, with valid confidence intervals.
 
-**In plain language:** Imagine you observe that customers with TechSupport churn less. But is that *because* TechSupport keeps them, or because long-tenured, engaged customers just tend to have TechSupport? DML answers: "After controlling for tenure, spending, demographics, and other services, having TechSupport *causally* increases retention probability by X%."
-
----
-
-## 📁 Repository Structure
-
-```
-├── schemas/
-│   ├── __init__.py              # Re-exports all models
-│   ├── canonical.py             # CanonicalRecord — the universal contract
-│   ├── agent_outputs.py         # Output models for Agents 1–3
-│   └── strategy_outputs.py      # Output models for Strategy Agent (Agent 4)
-├── adapters/
-│   ├── __init__.py              # Adapter registry
-│   └── telco_churn_adapter.py   # Telco churn -> CanonicalRecord
-├── agents/
-│   ├── __init__.py              # Package docs
-│   ├── user_behavior.py         # Agent 1: DBSCAN + autoencoder
-│   ├── churn_prediction.py      # Agent 2: Cox PH + GBM
-│   ├── feature_analysis.py      # Agent 3: LinearDML
-│   └── strategy_agent.py        # Agent 4: LLM reasoning + heuristic fallback
-├── action_agent/                # Action Agent (teammate's module)
-│   ├── agent.py                 # LangGraph workflow
-│   ├── schemas.py               # StrategyRecommendation input contract
-│   └── tools.py                 # GrowthBook, Stripe, Slack mock tools
-├── testing_ui/
-│   └── app.py                   # Streamlit agent-testing dashboard
-├── data/
-│   └── raw/
-│       └── telco_churn.csv      # Raw dataset
-├── notebooks/
-│   └── eda.ipynb                # Exploratory data analysis
-├── pipeline.py                  # End-to-end orchestration (all 4 agents)
-├── requirements.txt             # Python dependencies
-└── README.md                    # This file
-```
-
+> **In plain language:** Imagine you observe customers with TechSupport churn less. But is that *because* TechSupport keeps them, or because engaged customers tend to have it? DML answers: "After controlling for tenure, spending, and demographics, having TechSupport *causally* increases retention probability by X%."
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### Prerequisites
+
+- **Python 3.10+** — [python.org/downloads](https://www.python.org/downloads/)
+- **Node.js 18+** — [nodejs.org](https://nodejs.org/)
+
+### Option 1: One-Command Launch (Windows)
 
 ```bash
-python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+# From the project root — installs all dependencies and starts both servers
+run_dev.bat
 ```
 
-### 2. Run the Pipeline
+This will:
+1. Check for Python and Node.js
+2. Install Python dependencies (`pip install -r requirements.txt`)
+3. Install frontend dependencies (`npm install`)
+4. Start the FastAPI backend on **http://localhost:8000**
+5. Start the Vite dev server on **http://localhost:5173**
+6. Open API docs at **http://localhost:8000/docs**
+
+### Option 2: Manual Setup
+
+```bash
+# 1. Create and activate a virtual environment
+python -m venv venv
+venv\Scripts\activate              # Windows
+# source venv/bin/activate         # macOS/Linux
+
+# 2. Install Python dependencies
+pip install -r requirements.txt
+
+# 3. Run the ML pipeline (generates data/pipeline_output.json)
+python pipeline.py
+
+# 4. Start the FastAPI backend
+uvicorn api.server:app --reload --port 8000
+
+# 5. In a separate terminal — install and start the frontend
+cd Frontend
+npm install
+npm run dev
+```
+
+### Option 3: Pipeline Only (No Dashboard)
 
 ```bash
 # Default: loads data/raw/, auto-detects adapter, prints summary
@@ -147,88 +363,110 @@ python pipeline.py --output results/output.json
 python pipeline.py --adapter telco_churn --data-dir data/raw/
 ```
 
-### 3. Output
+### Option 4: Streamlit Testing Dashboard
 
-The pipeline produces:
-- **Console summary** with cluster profiles, model metrics, and causal effects
-- **Full JSON** saved to `data/pipeline_output.json` (or custom `--output` path)
-
-This JSON includes Strategy Agent recommendations and pre-formatted Action Agent inputs.
+```bash
+streamlit run testing_ui/app.py
+```
 
 ---
 
-## 🧠 Strategy Agent (Agent 4) — Output Schema Contract
-
-The Strategy Agent is the critical integration point between the three ML agents and the Action Agent. Its output schema is **the** contract that both the Action Agent and human reviewers consume.
-
-### Pipeline Position
+## 📁 Repository Structure
 
 ```
-[User Behavior, Churn Prediction, Feature Analysis]
-    -> Strategy Agent (this module)
-        -> Action Agent (human-approved execution)
+├── api/
+│   └── server.py                # FastAPI backend (REST API, SQLite, CORS)
+├── schemas/
+│   ├── __init__.py              # Re-exports all models
+│   ├── canonical.py             # CanonicalRecord — the universal data contract
+│   ├── agent_outputs.py         # Output models for Agents 1–3
+│   └── strategy_outputs.py      # Output models for Strategy Agent (Agent 4)
+├── adapters/
+│   ├── __init__.py              # Adapter registry with @register decorator
+│   └── telco_churn_adapter.py   # IBM Telco Churn → CanonicalRecord mapping
+├── agents/
+│   ├── __init__.py              # Package docs
+│   ├── user_behavior.py         # Agent 1: DBSCAN + autoencoder segmentation
+│   ├── churn_prediction.py      # Agent 2: Cox PH + Gradient Boosting
+│   ├── feature_analysis.py      # Agent 3: Double ML causal inference
+│   └── strategy_agent.py        # Agent 4: LLM reasoning + heuristic fallback
+├── action_agent/                # Agent 5: Action execution (LangGraph)
+│   ├── agent.py                 # LangGraph StateGraph workflow
+│   ├── schemas.py               # StrategyRecommendation input contract
+│   ├── tools.py                 # GrowthBook, Stripe, Slack mock tools
+│   ├── config.py                # Configuration and environment
+│   ├── Architecture.md          # Detailed architecture documentation
+│   └── README.md                # Action Agent readme
+├── Frontend/                    # React 19 production dashboard
+│   ├── src/
+│   │   ├── pages/               # 9 page components (Overview, ChurnRisk, etc.)
+│   │   ├── components/          # Reusable UI components (KpiCard, charts, etc.)
+│   │   ├── layout/              # AppShell sidebar layout
+│   │   ├── lib/                 # API client, formatters, hooks
+│   │   ├── data/                # Mock data for offline development
+│   │   ├── state/               # Application state management
+│   │   ├── App.tsx              # Root component
+│   │   ├── routes.tsx           # Route definitions
+│   │   └── main.tsx             # Entry point
+│   ├── package.json             # Node dependencies
+│   └── vite.config.ts           # Vite configuration
+├── testing_ui/
+│   └── app.py                   # Streamlit dev/testing dashboard
+├── data/
+│   └── raw/                     # Raw dataset files
+├── Dataset/
+│   └── WA_Fn-UseC_-Telco-Customer-Churn.csv  # Original IBM dataset
+├── notebooks/
+│   └── eda.ipynb                # Exploratory data analysis
+├── logs/                        # Pipeline run logs (loguru)
+├── Synopsis/                    # Project synopsis documents
+├── pipeline.py                  # End-to-end pipeline orchestration
+├── start_dev.py                 # Development server launcher (Python)
+├── run_dev.bat                  # One-click dev server (Windows)
+├── run.bat                      # Production run script
+├── requirements.txt             # Python dependencies
+└── README.md                    # This file
 ```
 
-### What It Does
+---
 
-1. **Aggregates** churn risk at the segment level (deterministic — not LLM).
-2. **Ranks** causally significant features from Feature Analysis.
-3. **Reasons** over segments + causal evidence (LLM or heuristic fallback).
-4. **Produces** one `SegmentRecommendation` per flagged segment, ranked by estimated impact.
+## 🔌 Adding a New Data Source
 
-### Top-Level Output: `StrategyAgentResult`
+The adapter pattern makes it trivial to add new data sources — **no agent code changes required**.
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `recommendations` | `list[SegmentRecommendation]` | Ranked recommendations, one per flagged segment |
-| `segments_analysed` | `int` | Total clusters from User Behavior Agent |
-| `segments_flagged` | `int` | Segments that received a recommendation |
-| `significant_features_available` | `int` | Causally significant features from Feature Analysis |
-| `pipeline_metadata` | `dict` | LLM provider, model, latency, reasoning engine |
+### Step 1: Create the Adapter
 
-### Per-Segment Recommendation: `SegmentRecommendation`
+```python
+# adapters/stripe_adapter.py
+from adapters import register
+from schemas.canonical import CanonicalRecord
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `recommendation_id` | `str` | Unique ID (e.g. `rec_a1b2c3d4`) |
-| `action_type` | `ActionTypeEnum` | **Constrained** to: `trigger_a_b_test`, `apply_stripe_discount`, `send_cs_alert` |
-| `action_parameters` | `dict` | Tool-specific parameters matching Action Agent schemas |
-| `segment_risk` | `SegmentRiskEvidence` | Aggregated churn metrics for the target cluster |
-| `causal_evidence` | `CausalEvidence` | Feature-level causal effect with full CI preserved |
-| `justification` | `str` | **Human-readable narrative** naming segment, risk evidence, and causal evidence |
-| `confidence_score` | `float [0,1]` | Derived from CI width (narrow=high confidence), NOT LLM self-assessment |
-| `estimated_impact` | `float` | `ATE x segment_size` — expected additional retained customers |
-| `urgency` | `str` | `critical`, `high`, `medium`, or `low` |
-| `segment_label` | `str` | Human-readable segment descriptor |
+@register("stripe")
+def load(path: str | Path) -> list[CanonicalRecord]:
+    # Read your raw data (CSV, JSON, API, database...)
+    # Map each row to a CanonicalRecord
+    # Return the list
+    ...
+```
 
-### Mapping to Action Agent Input
+### Step 2: Register It
 
-The `to_action_agent_inputs()` utility converts each recommendation to the Action Agent's `StrategyRecommendation` schema:
+```python
+# In adapters/__init__.py, add:
+from adapters import stripe_adapter
+```
 
-| SegmentRecommendation | -> | StrategyRecommendation |
-|-----------------------|----|------------------------|
-| `recommendation_id` | | `recommendation_id` |
-| `action_type.value` | | `action_type` |
-| `segment_label` | | `target_entity` |
-| `justification` | | `description` and `justification` |
-| `action_parameters` | | `parameters` |
-| `confidence_score` | | `confidence_score` |
+### Step 3: Run
 
-### Action Types (Constrained)
+```bash
+python pipeline.py --adapter stripe --data-dir path/to/stripe/data
+```
 
-The `action_type` field is an enum pinned to exactly what the Action Agent implements:
+The three ML agents only read the canonical schema — they never see raw column names.
 
-| Value | Action Agent Tool | Risk Level | Use Case |
-|-------|-------------------|------------|----------|
-| `trigger_a_b_test` | GrowthBook experiment | Low (auto) | Product feature experiments |
-| `apply_stripe_discount` | Stripe retention coupon | **High (HITL)** | Payment-driven churn |
-| `send_cs_alert` | Slack/CRM notification | Low (auto) | Manual outreach |
+---
 
-### Grounding Guarantees
-
-- **No invented numbers.** All risk scores, ATE values, CI bounds, and cluster sizes in the justification come from upstream agents. The LLM prompt explicitly forbids stating numbers not in the input.
-- **CI fidelity.** The `CausalEvidence` sub-model carries the original `ci_lower`, `ci_upper`, and `ci_width` from Feature Analysis. If the CI is wide (>0.3), the justification says "suggestive but imprecise evidence" and `confidence_score` is lowered.
-- **Deterministic fallback.** When no LLM API key is configured, the same output schema is produced by a rule-based engine, so the pipeline runs end-to-end without external dependencies.
+## ⚙️ Configuration
 
 ### Environment Variables
 
@@ -236,110 +474,64 @@ The `action_type` field is an enum pinned to exactly what the Action Agent imple
 |----------|---------|-------------|
 | `STRATEGY_LLM_MODEL` | `openai:gpt-4o` | LangChain model string (supports any provider via `init_chat_model`) |
 | `STRATEGY_LLM_TEMPERATURE` | `0.0` | LLM temperature (0 = deterministic) |
-| `OPENAI_API_KEY` | — | Required for OpenAI models. If absent, heuristic fallback is used. |
+| `OPENAI_API_KEY` | — | Required for OpenAI models. If absent, heuristic fallback is used |
 
-### Example Output (Heuristic Mode)
+### Dashboard Settings (via UI or API)
 
-```json
-{
-  "recommendation_id": "rec_a1b2c3d4",
-  "action_type": "trigger_a_b_test",
-  "segment_label": "New - Low-spend - Minimal-service",
-  "urgency": "high",
-  "confidence_score": 0.93,
-  "estimated_impact": 83.6,
-  "justification": "Segment 'New - Low-spend - Minimal-service' (cluster 0, 1729 customers) has a mean churn risk of 48% with a 6-month survival probability of 75%. The dominant churn driver is 'dissatisfaction'. Feature Analysis identifies 'Having TechSupport' as the strongest causal lever for retention, with strong statistical confidence (ATE = +0.0484, 95% CI = [0.0141, 0.0826]). An A/B test is recommended to validate whether deploying 'Having TechSupport' reduces churn in this segment.",
-  "causal_evidence": {
-    "feature_name": "TechSupport",
-    "ate": 0.0484,
-    "ci_lower": 0.0141,
-    "ci_upper": 0.0826,
-    "ci_width": 0.0685,
-    "is_significant": true
-  }
-}
-```
+| Setting | Options | Description |
+|---------|---------|-------------|
+| **Mode** | `dry-run` / `live` | Whether actions actually execute or only simulate |
+| **Require Approval** | `true` / `false` | Whether high-risk actions need human sign-off |
+| **Risk Thresholds** | `{ high: 60, medium: 30, window_days: 90 }` | Risk scoring thresholds |
+| **Schedule** | `daily-06` / custom | Pipeline execution schedule |
 
----
-
-## 🧪 Agent Testing Dashboard
-
-A standalone Streamlit UI for testing all five pipeline agents (User Behavior,
-Churn Prediction, Feature Analysis, Strategy Agent, Action Agent) individually
-and as a connected end-to-end pipeline during development.  It imports the
-existing agent code directly — no logic is reimplemented.
-
-### Running the Dashboard
-
-```bash
-# From the project root
-streamlit run testing_ui/app.py
-
-# Optional: set an LLM API key for Strategy Agent LLM-based reasoning
-# (falls back to deterministic heuristic engine if unset)
-OPENAI_API_KEY=sk-... streamlit run testing_ui/app.py
-```
-
-### Features
-
-| Feature | Details |
-|---------|---------|
-| **Agent selector** | Tabs for User Behavior, Churn Prediction, Feature Analysis, Strategy & Approvals, Full Pipeline |
-| **Data selection** | Full dataset, random sample of N customers, or a single `customer_id` |
-| **Structured output** | Cluster profiles table, PCA scatter, sortable risk table, survival curves, ATE chart with CIs |
-| **Strategy & Approvals** | Runs Strategy Agent against upstream outputs; shows justifications side-by-side with raw grounding data (risk scores, causal CIs); real Approve/Reject controls wired to the Action Agent (confirmed mocked) |
-| **Full Pipeline** | Runs all 5 agents in order on one input; shows each stage's output feeding into the next with schema-compatibility checks at handoff boundaries |
-| **Run metadata** | Records processed, wall-clock time |
-| **Error surfacing** | Agent errors appear as readable messages in the UI (not just terminal tracebacks) |
-
-> **Tip:** The Feature Analysis agent is slow on the full dataset (~30-60 s).
-> Use a random sample of 200–500 records for faster iteration.
-
----
-
-## 🔌 Adding a New Data Source
-
-To add a second data source (e.g. Stripe billing data, a different CRM):
-
-1. **Create the adapter**: `adapters/stripe_adapter.py`
-
-```python
-from adapters import register
-from schemas.canonical import CanonicalRecord
-
-@register("stripe")
-def load(path: str | Path) -> list[CanonicalRecord]:
-    # Read your raw data
-    # Map each row to a CanonicalRecord
-    # Return the list
-    ...
-```
-
-2. **Register it**: Add `from adapters import stripe_adapter` to `adapters/__init__.py`
-
-3. **Run**: `python pipeline.py --adapter stripe --data-dir path/to/stripe/data`
-
-**No changes to any agent are needed.** The three agents only read the canonical schema — they never see raw column names.
+> **Note:** The Strategy Agent works fully without an LLM API key by falling back to a deterministic heuristic engine that produces the same output schema.
 
 ---
 
 ## 🔧 Tech Stack
 
+### Backend
+
 | Purpose | Library | Why |
 |---------|---------|-----|
-| Schema/validation | Pydantic v2 | Type-safe contracts; LangChain-native |
-| Data processing | pandas, numpy | Industry standard for tabular data |
-| Clustering | scikit-learn (DBSCAN) | Robust, well-documented density-based clustering |
-| Anomaly scoring | scikit-learn (MLPRegressor) | Lightweight autoencoder without PyTorch dependency |
-| Survival analysis | lifelines | Pure Python Cox PH with excellent API |
-| Binary classification | scikit-learn (GradientBoosting) | Strong baseline with feature importances |
-| Causal inference | econml (LinearDML) | Microsoft Research; DML with valid CIs |
-| LangChain | langchain, langchain-core, langchain-openai | LCEL wrappers + Strategy Agent LLM reasoning |
-| LLM abstraction | langchain `init_chat_model` | Provider-agnostic; switch with env var |
-| Logging | loguru | Clean, structured logging |
+| Web API | **FastAPI** | Async, auto-generated OpenAPI docs |
+| Schema & Validation | **Pydantic v2** | Type-safe contracts; LangChain-native |
+| Data Processing | **pandas**, **numpy** | Industry standard for tabular data |
+| Clustering | **scikit-learn** (DBSCAN) | Density-based clustering, no *k* required |
+| Anomaly Scoring | **scikit-learn** (MLPRegressor) | Lightweight autoencoder without PyTorch |
+| Survival Analysis | **lifelines** | Pure Python Cox PH with excellent API |
+| Binary Classification | **scikit-learn** (GradientBoosting) | Strong baseline with feature importances |
+| Causal Inference | **econml** (LinearDML) | Microsoft Research; DML with valid CIs |
+| LLM Orchestration | **LangChain** + **LangChain Core** | LCEL wrappers + Strategy Agent reasoning |
+| Agent Workflow | **LangGraph** | Stateful workflows with HITL approval gates |
+| LLM Abstraction | `langchain.init_chat_model` | Provider-agnostic model switching via env var |
+| Logging | **loguru** | Clean, structured logging with rotation |
+| Database | **SQLite** | Run history and settings persistence |
+| Testing UI | **Streamlit** | Rapid prototyping for agent testing |
+
+### Frontend
+
+| Purpose | Library | Why |
+|---------|---------|-----|
+| UI Framework | **React 19** | Latest with concurrent features |
+| Routing | **React Router 8** | File-based nested layouts |
+| Build Tool | **Vite 8** | Lightning-fast HMR |
+| Styling | **Tailwind CSS 4** | Utility-first with dark mode |
+| Charts | **Recharts 3** | Composable React chart components |
+| Icons | **Lucide React** | Consistent, tree-shakeable icon set |
+| Language | **TypeScript 5.7** | Full type safety |
 
 ---
 
 ## 📄 License
 
-[Insert License Information Here]
+This project was built as a **Semester 5 Mini Project** for academic purposes.
+
+---
+
+<div align="center">
+
+**Built with ❤️ using Python, React, LangChain, and LangGraph**
+
+</div>
