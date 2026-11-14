@@ -33,17 +33,17 @@ export default function Overview() {
 
         <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent shadow-xs">
-              <Sparkles size={13} className="text-accent" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-editorial/30 bg-editorial/10 px-3 py-1 text-xs font-semibold text-editorial shadow-xs">
+              <Sparkles size={13} className="text-editorial" />
               <span>Today's Briefing</span>
             </div>
-            <h2 className="text-xl font-bold tracking-tight text-fg">
+            <h2 className="font-editorial text-2xl font-normal tracking-tight text-fg">
               {pendingIds.length > 0
                 ? `${pendingIds.length} high-impact retention actions are ready for execution`
                 : 'All retention recommendations processed and up to date'}
             </h2>
             <p className="max-w-2xl text-xs md:text-sm text-fg-2 leading-relaxed">
-              The system identified growing risk in <strong className="text-fg font-semibold">SMB</strong> and <strong className="text-fg font-semibold">Starters</strong> tiers. Acting on the top recommendations could protect up to <strong className="text-decision font-semibold">$24,800/mo</strong> in revenue.
+              The system identified growing risk in <strong className="text-fg font-semibold">SMB</strong> and <strong className="text-fg font-semibold">Starters</strong> tiers. Acting on the top recommendations could protect up to <strong className="text-editorial font-semibold">$24,800/mo</strong> in revenue.
             </p>
           </div>
 
@@ -124,7 +124,7 @@ export default function Overview() {
           value={headline.actionsExecuted30d}
           sub={
             <span>
-              93% success · <span className="num font-semibold text-pearl-aqua">$6.4k</span> retained
+              93% success · <span className="num font-semibold text-editorial">$6.4k</span> retained
             </span>
           }
           how="Approved actions that ran for real in the last 30 days. Dry runs are not counted."

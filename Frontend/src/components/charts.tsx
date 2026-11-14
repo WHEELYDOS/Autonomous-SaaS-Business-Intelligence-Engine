@@ -307,7 +307,7 @@ export function EngagementTrend({ data }: { data: Segment[] }) {
               isAnimationActive={false}
               label={(p: { x?: number | string; y?: number | string; index?: number }) =>
                 p.index === 11 ? (
-                  <text key={s.id} x={Number(p.x) + 8} y={Number(p.y) + 4} fontSize={12} fill={s.color} fontWeight={s.id === 'smb' ? 600 : 500}>
+                  <text key={s.id} x={Number(p.x) + 8} y={Number(p.y) + 4} fontSize={12} fill="var(--text)" fontWeight={s.id === 'smb' ? 600 : 500}>
                     {s.name} · {s.engagement[11]}
                   </text>
                 ) : (

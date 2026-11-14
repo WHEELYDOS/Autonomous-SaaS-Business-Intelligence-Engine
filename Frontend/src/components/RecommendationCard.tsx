@@ -84,7 +84,7 @@ export default function RecommendationCard({ rec, expanded = false, compact = fa
       <Card as="article" className="flex items-center gap-5 p-4.5 hover:border-accent/40 bg-surface/90 hover:shadow-xs transition-all duration-150">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 text-xs text-fg-2">
-            <span className="font-mono text-accent font-semibold">{rec.id}</span>
+            <span className="font-mono text-accent-strong font-semibold">{rec.id}</span>
             <span aria-hidden className="text-fg-2/40">·</span>
             <SegmentChip id={rec.segment} />
             <ActionTypeTag type={rec.type} />
@@ -92,12 +92,12 @@ export default function RecommendationCard({ rec, expanded = false, compact = fa
           </div>
           <h3 className="mt-2 truncate text-sm font-bold text-fg tracking-tight">{rec.title}</h3>
           <p className="num mt-1 text-xs text-fg-2">
-            {fmtInt(accounts)} accounts · effect <span className="font-medium text-pearl-aqua">{fmtPts(rec.lift)}</span> ({fmtRange(rec.lo, rec.hi)})
+            {fmtInt(accounts)} accounts · effect <span className="font-medium text-risk-low">{fmtPts(rec.lift)}</span> ({fmtRange(rec.lo, rec.hi)})
           </p>
         </div>
         <div className="text-right">
           <p className="text-[11px] font-semibold text-fg-2 uppercase tracking-wider">Est. MRR Retained</p>
-          <p className="num text-xl font-bold text-pearl-aqua tracking-tight">{fmtMoney(mrr)}</p>
+          <p className="num text-xl font-bold text-editorial tracking-tight">{fmtMoney(mrr)}</p>
         </div>
         <Button variant="decision" size="sm" onClick={() => navigate(`/recommendations?tab=pending&expand=${rec.id}`)}>
           Review <ArrowRight size={14} aria-hidden />

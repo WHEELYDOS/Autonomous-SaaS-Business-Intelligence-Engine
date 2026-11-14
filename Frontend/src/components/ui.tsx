@@ -255,7 +255,7 @@ export function ActionTypeTag({ type }: { type: ActionType | string }) {
 
 export function SegmentDot({ id, size = 8 }: { id: SegmentId | string | number | null; size?: number }) {
   const seg = typeof id === 'string' && id in segmentById ? segmentById[id as SegmentId] : undefined
-  const color = seg?.color ?? '#888'
+  const color = seg?.color ?? 'var(--muted)'
   return <span aria-hidden className="inline-block shrink-0 rounded-full" style={{ width: size, height: size, background: color }} />
 }
 
@@ -498,7 +498,7 @@ export function PageHeader({ title, description, agent, agentStatus, right }: { 
   return (
     <div className="col-span-12 flex flex-col md:flex-row md:items-end justify-between gap-4 pb-2">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-fg bg-gradient-to-r from-fg via-fg to-fg-2 bg-clip-text">{title}</h1>
+        <h1 className="font-editorial text-3xl font-medium tracking-tight text-fg">{title}</h1>
         <p className="mt-1 max-w-2xl text-sm text-fg-2 leading-relaxed">{description}</p>
       </div>
       <div className="flex flex-wrap items-center gap-3">

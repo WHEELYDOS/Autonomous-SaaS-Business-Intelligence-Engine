@@ -142,7 +142,7 @@ export const segments: Segment[] = [
   {
     id: 'enterprise',
     name: 'Enterprise Admins',
-    color: '#005F73',
+    color: '#E9D8A6',
     accounts: 1140,
     avgMrr: 868,
     avgRisk: 3.4,

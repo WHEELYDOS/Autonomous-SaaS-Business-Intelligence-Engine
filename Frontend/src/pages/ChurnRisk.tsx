@@ -60,8 +60,8 @@ export default function ChurnRisk() {
           ) : (
             <Donut
               data={[
-                { label: 'Dissatisfaction', value: churnReasons[0].share, color: '#8FA3BF', detail: churnReasons[0].detail },
-                { label: 'Payment', value: churnReasons[1].share, color: '#56657A', detail: churnReasons[1].detail },
+                { label: 'Dissatisfaction', value: churnReasons[0].share, color: '#EE9B00', detail: churnReasons[0].detail },
+                { label: 'Payment', value: churnReasons[1].share, color: '#0A9396', detail: churnReasons[1].detail },
               ]}
               center={
                 <>
