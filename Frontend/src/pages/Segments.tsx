@@ -27,7 +27,7 @@ export default function Segments() {
 
   return (
     <>
-      <PageHeader title="Segments" description="Groups of accounts that behave alike, and how each group's health is changing." agent="User Behavior agent" agentStatus={`Completed ${state.lastRun.label}`} />
+      <PageHeader title="Segments" description="Customer groups based on behavior patterns." />
 
       <Card className="col-span-12">
         <CardHeader title="All segments" subtitle={`${fmtInt(headline.accounts)} accounts in five behavior groups. Select a row for details.`} />

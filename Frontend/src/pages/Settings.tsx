@@ -18,13 +18,13 @@ function Approvals() {
   const [roles, setRoles] = useState<Record<string, string>>({ 'UI guide': 'approver', 'Targeted email': 'approver', 'A/B test': 'approver', 'Pricing change': 'admin' })
   return (
     <Card>
-      <CardHeader title="Approval rules" subtitle="Who must sign off before the Action agent runs anything" />
+      <CardHeader title="Approval rules" subtitle="Who must sign off before any action runs" />
       <div className="space-y-5 px-5 pb-5">
         <div className="flex items-center gap-4 rounded-md border border-line bg-raised/50 p-4">
           <Lock size={16} className="text-fg-2" aria-hidden />
           <div className="flex-1">
             <p className="text-sm font-semibold text-fg">Require human approval for every action</p>
-            <p className="text-xs text-fg-2">Always on. Agents can recommend but never act on their own.</p>
+            <p className="text-xs text-fg-2">Always on. Recommendations can be made but never acted on automatically.</p>
           </div>
           <Switch checked disabled label="Require human approval (locked on)" description="Locked on by your organization's policy" />
         </div>
@@ -193,7 +193,7 @@ export default function SettingsPage() {
   if (!current) return <Navigate to="/settings/approvals" replace />
   return (
     <>
-      <PageHeader title="Settings" description="Guardrails, thresholds and connections for the agents." />
+      <PageHeader title="Settings" description="Guardrails, thresholds and connections." />
       <nav className="col-span-3" aria-label="Settings sections">
         <ul className="space-y-1">
           {sections.map((s) => (

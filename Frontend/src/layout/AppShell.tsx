@@ -4,62 +4,43 @@ import {
   Activity,
   AlertTriangle,
   ClipboardCheck,
-  Copy,
-  Database,
-  Download,
-  FileText,
-  FlaskConical,
   LayoutDashboard,
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
   RefreshCw,
-  Settings,
-  Sheet,
-  ShieldAlert,
-  Sparkles,
   Sun,
   Users,
   Zap,
 } from 'lucide-react'
 import { segments } from '@/data/mock'
 import { currentUser } from '@/data/mock'
-import { useApp, type DemoState } from '@/state/AppState'
+import { useApp } from '@/state/AppState'
 import { Modal } from '@/components/Overlay'
 import ToastStack from '@/components/ToastStack'
 import { Banner, Button, Popover, Select, cx } from '@/components/ui'
 
 const nav = [
   { to: '/', label: 'Overview', icon: LayoutDashboard, end: true },
-  { to: '/segments', label: 'Segments', icon: Users },
-  { to: '/churn-risk', label: 'Churn Risk', icon: ShieldAlert },
-  { to: '/feature-impact', label: 'Feature Impact', icon: FlaskConical },
+  { to: '/customers', label: 'Customers', icon: Users },
   { to: '/recommendations', label: 'Recommendations', icon: ClipboardCheck, badge: true },
-  { to: '/actions', label: 'Actions & Impact', icon: Zap },
-  { to: '/pipeline', label: 'Pipeline & Data', icon: Database },
-  { to: '/settings', label: 'Settings', icon: Settings },
+  { to: '/activity', label: 'Activity', icon: Zap },
 ]
 
 const titles: [string, string][] = [
+  ['/customers', 'Customers'],
+  ['/recommendations', 'Recommendations'],
+  ['/activity', 'Activity'],
+  ['/settings', 'Settings'],
+  ['/accounts', 'Customer Detail'],
   ['/segments', 'Segments'],
   ['/churn-risk', 'Churn Risk'],
   ['/feature-impact', 'Feature Impact'],
-  ['/recommendations', 'Recommendations & Approvals'],
-  ['/actions', 'Actions & Impact'],
-  ['/pipeline', 'Pipeline & Data'],
-  ['/settings', 'Settings'],
-  ['/accounts', 'Customer Detail'],
-]
-
-const demoOptions: { value: DemoState; label: string }[] = [
-  { value: 'normal', label: 'Normal' },
-  { value: 'stale', label: 'Stale data' },
-  { value: 'failedRun', label: 'Failed run' },
-  { value: 'emptyPending', label: 'All caught up' },
+  ['/pipeline', 'Pipeline'],
 ]
 
 export default function AppShell() {
-  const { state, pendingIds, refresh, setMode, setSegment, setTheme, setDemo, toast } = useApp()
+  const { state, pendingIds, refresh, setMode, setSegment, setTheme, toast } = useApp()
   const location = useLocation()
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(() => {
@@ -70,8 +51,6 @@ export default function AppShell() {
     }
   })
   const [confirmLive, setConfirmLive] = useState(false)
-  const [range, setRange] = useState('90')
-  const [source, setSource] = useState('all')
 
   useEffect(() => {
     try {
@@ -90,7 +69,7 @@ export default function AppShell() {
   const live = state.mode === 'live'
 
   useEffect(() => {
-    document.title = `${title} · SaaS BI Engine`
+    document.title = `${title} · Retention Workspace`
   }, [title])
 
   return (
@@ -107,8 +86,8 @@ export default function AppShell() {
           </span>
           {!collapsed && (
             <span className="min-w-0">
-              <span className="block text-sm leading-4 font-semibold text-fg">SaaS BI Engine</span>
-              <span className="block text-xs text-fg-2">Churn intelligence</span>
+              <span className="block text-sm leading-4 font-semibold text-fg">Retention Workspace</span>
+              <span className="block text-xs text-fg-2">Keep customers happy</span>
             </span>
           )}
         </div>
@@ -187,7 +166,7 @@ export default function AppShell() {
               </button>
             )}
           >
-            <div className="-mt-1 space-y-3" style={{ position: 'relative' }}>
+            <div className="-mt-1" style={{ position: 'relative' }}>
               <div>
                 <p className="mb-1.5 text-xs font-semibold text-fg">Theme</p>
                 <div className="grid grid-cols-2 gap-1 rounded-md bg-surface p-1">
@@ -205,25 +184,6 @@ export default function AppShell() {
                   ))}
                 </div>
               </div>
-              <div>
-                <p className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-fg">
-                  <Sparkles size={12} aria-hidden /> Preview states
-                </p>
-                <div className="space-y-0.5">
-                  {demoOptions.map((o) => (
-                    <button
-                      key={o.value}
-                      type="button"
-                      aria-pressed={state.demoState === o.value}
-                      onClick={() => setDemo(o.value)}
-                      className={cx('flex h-7 w-full items-center justify-between rounded px-2 text-xs', state.demoState === o.value ? 'bg-surface text-fg' : 'text-fg-2 hover:text-fg')}
-                    >
-                      {o.label}
-                      {state.demoState === o.value && <span className="size-1.5 rounded-full bg-accent" aria-hidden />}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </Popover>
         </div>
@@ -234,27 +194,6 @@ export default function AppShell() {
         <header className="flex h-16 shrink-0 items-center gap-4 border-b border-line bg-surface px-8">
           <p className="mr-auto truncate text-base font-semibold text-fg">{title}</p>
           <div className="flex items-center gap-2">
-            <Select
-              label="Date range"
-              value={range}
-              onChange={setRange}
-              options={[
-                { value: '30', label: 'Last 30 days' },
-                { value: '90', label: 'Last 90 days' },
-                { value: '180', label: 'Last 180 days' },
-              ]}
-            />
-            <Select
-              label="Data source"
-              value={source}
-              onChange={setSource}
-              options={[
-                { value: 'all', label: 'All sources' },
-                { value: 'billing', label: 'Billing (Stripe)' },
-                { value: 'usage', label: 'Product usage' },
-                { value: 'support', label: 'Support (Zendesk)' },
-              ]}
-            />
             <Select
               label="Segment"
               value={state.segmentFilter}
@@ -285,36 +224,6 @@ export default function AppShell() {
             <span className={cx('size-2 rounded-full', live ? 'animate-pulse bg-risk-high' : 'border border-fg-2')} aria-hidden />
             {live ? 'Live' : 'Dry-run'}
           </button>
-          <Popover
-            align="right"
-            width={200}
-            trigger={({ open, toggle, id }) => (
-              <Button size="sm" variant="secondary" onClick={toggle} aria-expanded={open} aria-controls={open ? id : undefined} icon={<Download size={14} aria-hidden />}>
-                Export
-              </Button>
-            )}
-          >
-            <div className="-m-1.5 space-y-0.5">
-              {[
-                { label: 'Download CSV', icon: Sheet, msg: `${title} exported as CSV` },
-                { label: 'Download PDF', icon: FileText, msg: `${title} exported as PDF` },
-                { label: 'Copy link', icon: Copy, msg: 'Link copied to clipboard' },
-              ].map((o) => (
-                <button
-                  key={o.label}
-                  type="button"
-                  onClick={() => {
-                    if (o.label === 'Copy link') navigator.clipboard?.writeText(window.location.href).catch(() => {})
-                    toast({ tone: 'success', title: o.msg })
-                  }}
-                  className="flex h-8 w-full items-center gap-2 rounded px-2 text-xs text-fg hover:bg-surface"
-                >
-                  <o.icon size={14} aria-hidden className="text-fg-2" />
-                  {o.label}
-                </button>
-              ))}
-            </div>
-          </Popover>
         </header>
 
         <main id="main" tabIndex={-1} className="flex-1 overflow-y-auto outline-none">

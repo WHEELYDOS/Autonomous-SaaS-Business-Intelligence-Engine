@@ -18,7 +18,7 @@ export default function FeatureImpact() {
 
   return (
     <>
-      <PageHeader title="Feature Impact" description="Which features actually keep customers, not just which ones engaged customers happen to use." agent="Causal Feature Impact agent" agentStatus={`Completed ${state.lastRun.label}`} />
+      <PageHeader title="Feature Impact" description="What actually drives customer retention." />
 
       <Card className="col-span-8">
         <CardHeader

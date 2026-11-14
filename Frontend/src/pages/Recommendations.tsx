@@ -93,10 +93,8 @@ export default function Recommendations() {
   return (
     <>
       <PageHeader
-        title="Recommendations & Approvals"
-        description="Retention actions proposed by the Strategy agent. Nothing is sent until you approve it."
-        agent="Strategy agent (LLM)"
-        agentStatus={`Completed ${state.lastRun.label}`}
+        title="Recommendations"
+        description="Recommended actions to reduce churn. Nothing is sent until you approve it."
       />
 
       <div className="col-span-12 flex items-center gap-6 rounded-card border border-decision/40 bg-decision/[0.06] px-5 py-3">
@@ -188,9 +186,9 @@ export default function Recommendations() {
               <EmptyState
                 icon={<PartyPopper size={18} aria-hidden />}
                 title="No pending recommendations — you're all caught up"
-                body="The Strategy agent proposes new actions after each analysis run. The next run is at 06:00."
+                body="New actions are proposed after each analysis run. The next run is at 06:00."
                 action={
-                  <Link to="/actions" className="text-xs font-semibold text-accent hover:underline">
+                  <Link to="/activity" className="text-xs font-semibold text-accent hover:underline">
                     See what's running
                   </Link>
                 }

@@ -22,7 +22,7 @@ export default function ChurnRisk() {
 
   return (
     <>
-      <PageHeader title="Churn Risk" description="Who is likely to cancel, roughly when, and why." agent="Churn Risk agent" agentStatus={`Completed ${state.lastRun.label}`} />
+      <PageHeader title="Churn Risk" description="Predicted cancellation risk for each customer." />
 
       {expectedCancellations.map((e) => (
         <StatTile

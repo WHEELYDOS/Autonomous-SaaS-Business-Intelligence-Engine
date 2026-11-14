@@ -18,7 +18,7 @@ export default function Actions() {
 
   return (
     <>
-      <PageHeader title="Actions & Impact" description="Everything the Action agent has run, and whether it worked." agent="Action agent" agentStatus={paused ? 'Paused' : 'Active'} />
+      <PageHeader title="Activity" description="Everything automation has run, and whether it worked." />
 
       {actionStats.map((s) => (
         <StatTile key={s.label} label={s.label} value={s.value} how={s.hint} loading={loading} />
@@ -196,7 +196,7 @@ export default function Actions() {
               onClick={() => {
                 setAutomation('paused')
                 setConfirmPause(false)
-                toast({ tone: 'info', title: 'All automation paused', body: 'Turn it back on from Actions & Impact.' })
+                toast({ tone: 'info', title: 'All automation paused', body: 'Turn it back on from Activity.' })
               }}
             >
               Pause everything

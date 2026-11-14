@@ -79,7 +79,7 @@ export default function Pipeline() {
         </Card>
 
         <Card className="col-span-12">
-          <CardHeader title="Sources" subtitle="Connected systems feeding the agents" />
+          <CardHeader title="Sources" subtitle="Connected data systems" />
           <div className="grid grid-cols-5 gap-3 px-5 pb-5">
             {dataSources.map((s) => (
               <div key={s.name} className="rounded-md border border-line bg-raised/50 p-4">
@@ -109,7 +109,7 @@ export default function Pipeline() {
         ))}
 
         <Card className="col-span-7">
-          <CardHeader title="Schema mapping" subtitle="How source fields map to the fields the agents expect" />
+          <CardHeader title="Schema mapping" subtitle="How source fields map to the expected fields" />
           <DataTable
             caption="Schema mapping"
             dense

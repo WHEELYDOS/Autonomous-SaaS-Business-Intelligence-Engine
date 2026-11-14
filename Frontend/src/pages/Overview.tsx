@@ -1,5 +1,5 @@
 import { useNavigate, Link } from 'react-router'
-import { ArrowRight, Bot, CheckCircle2, ChevronRight, Cpu, Database, Flame, PartyPopper, ShieldAlert, Sparkles, TrendingDown, TrendingUp, TriangleAlert, XCircle, Zap } from 'lucide-react'
+import { ArrowRight, CheckCircle2, PartyPopper, ShieldAlert, Sparkles, TrendingDown, TrendingUp, TriangleAlert, XCircle, Zap } from 'lucide-react'
 import { anomalies, headline, kpiTrends, recommendationById, riskDistribution, segments, type ActionLogRow } from '@/data/mock'
 import { fmtInt, fmtMoney } from '@/lib/format'
 import { useApp } from '@/state/AppState'
@@ -22,10 +22,8 @@ export default function Overview() {
   return (
     <div className="col-span-12 space-y-6 anim-fade-in">
       <PageHeader
-        title="Good morning, Priya"
-        description="Autonomous churn prevention engine continuously monitoring 12,480 accounts and predicting revenue risk."
-        agent="5 AI Agents"
-        agentStatus={state.lastRun.loading ? 'Running ML Pipeline…' : `Synced ${state.lastRun.label}`}
+        title="Overview"
+        description="Your daily retention briefing — what needs attention and what automation has done."
       />
 
       {/* Executive AI Intelligence Briefing Banner */}
@@ -36,9 +34,8 @@ export default function Overview() {
         <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent shadow-xs">
-              <Sparkles size={13} className="text-accent animate-pulse" />
-              <span>Autonomous Intelligence Briefing</span>
-              <span className="size-1.5 rounded-full bg-accent pulse-radar" />
+              <Sparkles size={13} className="text-accent" />
+              <span>Today's Briefing</span>
             </div>
             <h2 className="text-xl font-bold tracking-tight text-fg">
               {pendingIds.length > 0
@@ -46,7 +43,7 @@ export default function Overview() {
                 : 'All retention recommendations processed and up to date'}
             </h2>
             <p className="max-w-2xl text-xs md:text-sm text-fg-2 leading-relaxed">
-              Causal analysis detected building churn risk in <strong className="text-fg font-semibold">SMB</strong> and <strong className="text-fg font-semibold">Starters</strong> tiers. Executing top recommendations is estimated to protect up to <strong className="text-amber-400 font-semibold">$24,800/mo</strong> in recurring revenue.
+              The system identified growing risk in <strong className="text-fg font-semibold">SMB</strong> and <strong className="text-fg font-semibold">Starters</strong> tiers. Acting on the top recommendations could protect up to <strong className="text-amber-400 font-semibold">$24,800/mo</strong> in revenue.
             </p>
           </div>
 
@@ -65,38 +62,13 @@ export default function Overview() {
             <Button
               variant="secondary"
               size="md"
-              onClick={() => navigate('/churn-risk')}
+              onClick={() => navigate('/customers')}
               icon={<ShieldAlert size={15} className="text-risk-high" />}
             >
-              Analyze Churn Risk
+              View at-risk customers
             </Button>
           </div>
         </div>
-      </div>
-
-      {/* 5-Agent Live Telemetry Strip */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        {[
-          { name: '1. User Behavior', model: 'HDBSCAN + RFM', status: '5 Segments', icon: Cpu, color: 'text-indigo-400' },
-          { name: '2. Churn Predictor', model: 'XGBoost (AUC 0.89)', status: '1,184 At Risk', icon: ShieldAlert, color: 'text-rose-400' },
-          { name: '3. Causal Impact', model: 'DoWhy Double-ML', status: '6 Drivers', icon: Flame, color: 'text-amber-400' },
-          { name: '4. Strategy Agent', model: 'Expected Value Tree', status: `${pendingIds.length} Formulated`, icon: Sparkles, color: 'text-cyan-400' },
-          { name: '5. Action Gatekeeper', model: 'Dry-run / Live Gate', status: state.mode === 'live' ? 'Live Armed' : 'Dry-run Safe', icon: Zap, color: 'text-emerald-400' },
-        ].map((ag) => {
-          const Icon = ag.icon
-          return (
-            <div key={ag.name} className="flex flex-col justify-between rounded-xl border border-line/80 bg-surface/80 p-3 shadow-xs hover:border-line-strong transition-all duration-150">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-fg-2 truncate">{ag.name}</span>
-                <Icon size={14} className={ag.color} />
-              </div>
-              <div className="mt-2">
-                <p className="text-xs font-bold text-fg tracking-tight">{ag.status}</p>
-                <p className="text-[10px] text-fg-2/70 truncate">{ag.model}</p>
-              </div>
-            </div>
-          )
-        })}
       </div>
 
       {/* KPI Cards Grid */}
@@ -117,7 +89,7 @@ export default function Overview() {
           delta="+6.2%"
           good={false}
           series={kpiTrends.atRisk.series}
-          how="Accounts with at least a 30% chance of cancelling in the next 90 days (medium or high risk)."
+          how="Accounts likely to cancel within 90 days, rated medium or high risk."
         />
         <KpiCard
           loading={loading}
@@ -126,7 +98,7 @@ export default function Overview() {
           delta="+4.9%"
           good={false}
           series={kpiTrends.mrrAtRisk.series}
-          how="Monthly revenue of each at-risk account multiplied by its chance of cancelling, then added up. Equals 6.1% of total MRR."
+          how="Monthly revenue of each at-risk account weighted by its likelihood of cancelling. Equals 6.1% of total MRR."
         />
         <KpiCard
           loading={loading}
@@ -135,7 +107,7 @@ export default function Overview() {
           delta="+0.3 pts"
           good={false}
           series={kpiTrends.churn.series}
-          how="Share of today's accounts we expect to cancel within 90 days, based on the survival curve on the Churn Risk page."
+          how="Share of accounts we expect to cancel within 90 days."
         />
         <KpiCard
           loading={loading}
@@ -144,7 +116,7 @@ export default function Overview() {
           value={pendingIds.length}
           sub={pendingIds.length ? 'Recommendations waiting for you' : "You're all caught up"}
           to={pendingIds.length ? '/recommendations?tab=pending' : undefined}
-          how="Recommendations from the Strategy agent that need a human decision before anything is sent."
+          how="Recommendations waiting for your decision before anything is sent."
         />
         <KpiCard
           loading={loading}
@@ -184,7 +156,7 @@ export default function Overview() {
                 title="No pending recommendations — you're all caught up"
                 body="The next analysis run is scheduled for 06:00 tomorrow. New recommendations will show up here."
                 action={
-                  <Button size="sm" variant="secondary" onClick={() => navigate('/actions')}>
+                  <Button size="sm" variant="secondary" onClick={() => navigate('/activity')}>
                     See what's running
                   </Button>
                 }
@@ -194,7 +166,7 @@ export default function Overview() {
         </Card>
 
         <Card className="col-span-12 lg:col-span-4">
-          <CardHeader title="Risk distribution" subtitle="All 12,480 accounts by chance of cancelling in 90 days" how="Each account gets a probability from the Churn Risk agent. High is 60% or more, medium 30–59%, low under 30%. Thresholds can be changed in Settings." />
+          <CardHeader title="Risk distribution" subtitle="All 12,480 accounts by chance of cancelling in 90 days" how="Each account gets a risk probability. High is 60% or more, medium 30-59%, low under 30%. Thresholds can be changed in Settings." />
           <div className="px-5 pb-5">{loading ? <Skeleton className="h-52" /> : <RiskDistribution data={riskDistribution} />}</div>
         </Card>
 
@@ -202,13 +174,13 @@ export default function Overview() {
           <CardHeader
             title="Segment health"
             subtitle="At-risk accounts per segment, colored by segment risk level"
-            how="Segments come from the User Behavior agent. Bar length is the number of medium- or high-risk accounts. Risk level reflects the segment's share of at-risk accounts and recent trend."
+            how="Bar length is the number of medium- or high-risk accounts in each segment. Risk level reflects the segment's share of at-risk accounts and recent trend."
           />
           <div className="px-3 pb-4">{loading ? <Skeleton className="mx-2 h-48" /> : <SegmentHealthBars data={[...segments].sort((a, b) => b.atRisk - a.atRisk)} onSelect={(id) => navigate(`/segments?segment=${id}`)} />}</div>
         </Card>
 
         <Card className="col-span-12 lg:col-span-6">
-          <CardHeader title="Anomaly alerts" subtitle="Unusual changes the agents spotted in the last run" />
+          <CardHeader title="Anomaly alerts" subtitle="Unusual changes spotted in the last run" />
           <ul className="px-5 pb-4">
           {anomalies.map((a) => {
             const logRow = a.retryActionId ? state.log.find((l) => l.id === a.retryActionId) : undefined
@@ -263,9 +235,9 @@ export default function Overview() {
       <Card className="col-span-12">
         <CardHeader
           title="Recent actions"
-          subtitle="What the Action agent ran, and early results"
+          subtitle="What automation ran, and early results"
           right={
-            <Link to="/actions" className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline">
+            <Link to="/activity" className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline">
               Open execution log <ArrowRight size={12} aria-hidden />
             </Link>
           }
@@ -276,7 +248,7 @@ export default function Overview() {
             loading={loading}
             rows={state.log.slice(0, 6)}
             rowKey={(r) => r.id}
-            onRowClick={() => navigate('/actions')}
+            onRowClick={() => navigate('/activity')}
             rowLabel={(r) => `${r.recommendation}, ${r.status}. Open execution log.`}
             columns={[
               { key: 'time', header: 'When', render: (r) => <span className="text-fg-2">{r.time}</span>, width: '120px' },
