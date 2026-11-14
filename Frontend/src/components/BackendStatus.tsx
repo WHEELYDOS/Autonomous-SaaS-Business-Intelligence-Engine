@@ -46,23 +46,23 @@ export default function BackendStatus() {
 
   const banners: Record<Conn, { bg: string; icon: React.ReactNode; text: string }> = {
     checking: {
-      bg: 'bg-blue-950/60 border-blue-800/50',
-      icon: <Loader2 size={14} className="animate-spin text-blue-400" />,
+      bg: 'bg-dark-teal/40 border-dark-cyan/30 text-pearl-aqua',
+      icon: <Loader2 size={14} className="animate-spin text-dark-cyan" />,
       text: 'Connecting to backend…',
     },
     online: {
-      bg: 'bg-emerald-950/60 border-emerald-800/50',
-      icon: <CheckCircle2 size={14} className="text-emerald-400" />,
+      bg: 'bg-dark-cyan/20 border-dark-cyan/40 text-pearl-aqua',
+      icon: <CheckCircle2 size={14} className="text-pearl-aqua" />,
       text: 'Backend connected',
     },
     offline: {
-      bg: 'bg-red-950/60 border-red-800/50',
-      icon: <WifiOff size={14} className="text-red-400" />,
+      bg: 'bg-oxidized-iron/20 border-oxidized-iron/40 text-wheat',
+      icon: <WifiOff size={14} className="text-oxidized-iron" />,
       text: `Backend offline — showing static data. ${detail}`,
     },
     mock: {
-      bg: 'bg-amber-950/60 border-amber-800/50',
-      icon: <AlertTriangle size={14} className="text-amber-400" />,
+      bg: 'bg-burnt-caramel/20 border-burnt-caramel/40 text-wheat',
+      icon: <AlertTriangle size={14} className="text-golden-orange" />,
       text: 'Running in mock mode — no backend required. Set VITE_USE_MOCK=false to connect.',
     },
   }

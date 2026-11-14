@@ -36,7 +36,7 @@ export default function KpiCard({
       className={cx(
         'group relative col-span-2 flex flex-col p-4.5 rounded-card transition-all duration-200',
         isDecision
-          ? 'border-amber-500/40 bg-gradient-to-b from-amber-500/[0.08] to-surface shadow-md shadow-amber-500/5 hover:border-amber-500/60'
+          ? 'border-decision/40 bg-decision/[0.06] shadow-xs hover:border-decision/70'
           : 'hover:border-line-strong'
       )}
     >
@@ -45,21 +45,21 @@ export default function KpiCard({
         className={cx(
           'absolute top-0 left-0 right-0 h-[2px] transition-opacity duration-300',
           isDecision
-            ? 'bg-gradient-to-r from-amber-500/40 via-amber-400 to-amber-500/40 opacity-100'
-            : 'bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-40 group-hover:via-accent/60 group-hover:opacity-100'
+            ? 'bg-decision opacity-90'
+            : 'bg-accent/40 opacity-30 group-hover:opacity-80'
         )}
       />
 
       <div className="flex items-center justify-between gap-1">
         <div className="flex items-center gap-1.5">
-          <p className={cx('text-xs font-semibold tracking-wide uppercase', isDecision ? 'text-amber-400' : 'text-fg-2')}>
+          <p className={cx('text-xs font-semibold tracking-wide uppercase', isDecision ? 'text-decision' : 'text-fg-2')}>
             {label}
           </p>
           <HowCalculated label={label}>{how}</HowCalculated>
         </div>
         {isDecision && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-bold text-amber-300">
-            <span className="size-1.5 rounded-full bg-amber-400 pulse-amber" />
+          <span className="inline-flex items-center gap-1 rounded-full bg-decision/20 px-1.5 py-0.5 text-[10px] font-bold text-decision">
+            <span className="size-1.5 rounded-full bg-decision" />
             ACTION
           </span>
         )}
@@ -73,7 +73,7 @@ export default function KpiCard({
       ) : (
         <>
           <div className="mt-3 flex items-end justify-between gap-2">
-            <p className={cx('num text-2xl font-bold tracking-tight', isDecision ? 'text-amber-300' : 'text-fg')}>
+            <p className={cx('num text-2xl font-bold tracking-tight', isDecision ? 'text-decision' : 'text-fg')}>
               {value}
             </p>
             {series && (
@@ -113,7 +113,7 @@ export default function KpiCard({
           {to && (
             <Link
               to={to}
-              className="mt-2.5 inline-flex items-center gap-1 text-xs font-semibold text-amber-400 hover:text-amber-300 hover:underline transition-colors"
+              className="mt-2.5 inline-flex items-center gap-1 text-xs font-semibold text-decision hover:underline transition-colors"
             >
               Review now <ArrowRight size={12} aria-hidden />
             </Link>

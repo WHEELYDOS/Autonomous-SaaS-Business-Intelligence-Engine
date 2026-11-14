@@ -40,14 +40,14 @@ export function Button({ variant = 'secondary', size = 'md', icon, className, ch
       type="button"
       {...rest}
       className={cx(
-        'inline-flex shrink-0 items-center justify-center gap-2 rounded-lg font-medium whitespace-nowrap transition-all duration-150 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer',
+        'inline-flex shrink-0 items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap transition-all duration-150 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer',
         size === 'sm' ? 'h-8 px-3 text-xs' : 'h-9 px-4 text-sm',
         !children && (size === 'sm' ? 'w-8 px-0' : 'w-9 px-0'),
-        variant === 'primary' && 'bg-gradient-to-r from-accent to-indigo-600 text-on-accent shadow-md shadow-accent/25 hover:brightness-110 hover:shadow-lg hover:shadow-accent/35',
-        variant === 'decision' && 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md shadow-amber-500/25 hover:brightness-110 hover:shadow-lg hover:shadow-amber-500/35',
-        variant === 'secondary' && 'border border-line bg-surface hover:bg-raised text-fg hover:border-line-strong hover:shadow-sm',
+        variant === 'primary' && 'bg-accent text-on-accent hover:bg-accent-strong font-semibold shadow-xs',
+        variant === 'decision' && 'bg-decision text-on-accent hover:brightness-110 font-semibold shadow-xs',
+        variant === 'secondary' && 'border border-line bg-surface hover:bg-raised text-fg hover:border-line-strong hover:shadow-xs',
         variant === 'ghost' && 'text-fg-2 hover:bg-raised hover:text-fg',
-        variant === 'danger' && 'border border-risk-high/40 bg-risk-high/10 text-risk-high hover:bg-risk-high/20',
+        variant === 'danger' && 'border border-risk-high/40 bg-risk-high/15 text-risk-high hover:bg-risk-high/25',
         className,
       )}
     >

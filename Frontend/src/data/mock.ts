@@ -94,7 +94,7 @@ export const segments: Segment[] = [
   {
     id: 'smb',
     name: 'SMB Self-Serve',
-    color: '#8B7FD6',
+    color: '#BB3E03',
     accounts: 4210,
     avgMrr: 79,
     avgRisk: 14.2,
@@ -118,7 +118,7 @@ export const segments: Segment[] = [
   {
     id: 'growth',
     name: 'Growth Teams',
-    color: '#4FB3BF',
+    color: '#EE9B00',
     accounts: 2860,
     avgMrr: 245,
     avgRisk: 5.9,
@@ -142,7 +142,7 @@ export const segments: Segment[] = [
   {
     id: 'enterprise',
     name: 'Enterprise Admins',
-    color: '#C77DB0',
+    color: '#005F73',
     accounts: 1140,
     avgMrr: 868,
     avgRisk: 3.4,
@@ -166,7 +166,7 @@ export const segments: Segment[] = [
   {
     id: 'starters',
     name: 'Low-Engagement Starters',
-    color: '#B8A06A',
+    color: '#AE2012',
     accounts: 2630,
     avgMrr: 49,
     avgRisk: 18.7,
@@ -190,7 +190,7 @@ export const segments: Segment[] = [
   {
     id: 'power',
     name: 'Power Integrators',
-    color: '#7F9CB5',
+    color: '#0A9396',
     accounts: 1640,
     avgMrr: 310,
     avgRisk: 2.6,

@@ -26,14 +26,14 @@ export default function Overview() {
         description="Your daily retention briefing — what needs attention and what automation has done."
       />
 
-      {/* Executive AI Intelligence Briefing Banner */}
-      <div className="relative overflow-hidden rounded-2xl border border-accent/25 bg-gradient-to-r from-accent/15 via-indigo-900/20 to-surface p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-accent/40">
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 size-48 rounded-full bg-accent/10 blur-3xl" aria-hidden />
-        <div className="absolute bottom-0 left-1/3 -mb-8 size-36 rounded-full bg-indigo-500/10 blur-2xl" aria-hidden />
+      {/* Executive Intelligence Briefing Banner */}
+      <div className="relative overflow-hidden rounded-xl border border-accent/30 bg-surface/95 p-6 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-accent/50">
+        <div className="absolute top-0 right-0 -mt-10 -mr-10 size-48 rounded-full bg-accent/10 blur-3xl pointer-events-none" aria-hidden />
+        <div className="absolute bottom-0 left-1/3 -mb-8 size-36 rounded-full bg-dark-teal/20 blur-2xl pointer-events-none" aria-hidden />
 
         <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent shadow-xs">
+            <div className="inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-semibold text-accent shadow-xs">
               <Sparkles size={13} className="text-accent" />
               <span>Today's Briefing</span>
             </div>
@@ -43,7 +43,7 @@ export default function Overview() {
                 : 'All retention recommendations processed and up to date'}
             </h2>
             <p className="max-w-2xl text-xs md:text-sm text-fg-2 leading-relaxed">
-              The system identified growing risk in <strong className="text-fg font-semibold">SMB</strong> and <strong className="text-fg font-semibold">Starters</strong> tiers. Acting on the top recommendations could protect up to <strong className="text-amber-400 font-semibold">$24,800/mo</strong> in revenue.
+              The system identified growing risk in <strong className="text-fg font-semibold">SMB</strong> and <strong className="text-fg font-semibold">Starters</strong> tiers. Acting on the top recommendations could protect up to <strong className="text-decision font-semibold">$24,800/mo</strong> in revenue.
             </p>
           </div>
 
@@ -54,7 +54,7 @@ export default function Overview() {
                 size="md"
                 onClick={() => navigate('/recommendations?tab=pending')}
                 icon={<Zap size={15} />}
-                className="shadow-lg shadow-amber-500/20 font-semibold"
+                className="font-semibold"
               >
                 Review {pendingIds.length} Actions
               </Button>
@@ -124,7 +124,7 @@ export default function Overview() {
           value={headline.actionsExecuted30d}
           sub={
             <span>
-              93% success · <span className="num font-semibold text-emerald-400">$6.4k</span> retained
+              93% success · <span className="num font-semibold text-pearl-aqua">$6.4k</span> retained
             </span>
           }
           how="Approved actions that ran for real in the last 30 days. Dry runs are not counted."
