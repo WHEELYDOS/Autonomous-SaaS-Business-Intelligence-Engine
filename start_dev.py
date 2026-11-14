@@ -42,15 +42,16 @@ def check_requirements():
 
 def check_node():
     """Warn if Node / npm is not installed."""
+    is_win = sys.platform == "win32"
     try:
-        subprocess.run(["node", "--version"], capture_output=True, check=True)
+        subprocess.run(["node", "--version"], capture_output=True, check=True, shell=is_win)
     except (FileNotFoundError, subprocess.CalledProcessError):
         print("[!] Node.js not found. Install it from https://nodejs.org/")
         sys.exit(1)
 
     if not (FRONTEND / "node_modules").exists():
         print("[*] node_modules not found - installing dependencies...")
-        subprocess.run(["npm", "install"], cwd=str(FRONTEND), check=True)
+        subprocess.run(["npm", "install"], cwd=str(FRONTEND), check=True, shell=is_win)
 
 
 def main():
@@ -95,12 +96,16 @@ def main():
         processes.append(backend)
         time.sleep(1.5)  # Give the backend a moment to start
 
+        frontend_env = os.environ.copy()
+        frontend_env.setdefault("PORT", "5173")
+
         frontend = subprocess.Popen(
             frontend_cmd,
             cwd=str(FRONTEND),
             stdout=sys.stdout,
             stderr=sys.stderr,
             shell=(sys.platform == "win32"),
+            env=frontend_env,
         )
         processes.append(frontend)
 
@@ -131,7 +136,11 @@ def main():
 
 
 if __name__ == "__main__":
-    _venv_python = ROOT / ".venv" / ("Scripts" if sys.platform == "win32" else "bin") / ("python.exe" if sys.platform == "win32" else "python")
-    if _venv_python.exists() and Path(sys.executable).resolve() != _venv_python.resolve():
-        sys.exit(subprocess.call([str(_venv_python), __file__] + sys.argv[1:]))
+    _candidates = [
+        ROOT / ".venv" / ("Scripts" if sys.platform == "win32" else "bin") / ("python.exe" if sys.platform == "win32" else "python"),
+        ROOT / "venv" / ("Scripts" if sys.platform == "win32" else "bin") / ("python.exe" if sys.platform == "win32" else "python"),
+    ]
+    for _vp in _candidates:
+        if _vp.exists() and Path(sys.executable).resolve() != _vp.resolve():
+            sys.exit(subprocess.call([str(_vp), __file__] + sys.argv[1:]))
     main()

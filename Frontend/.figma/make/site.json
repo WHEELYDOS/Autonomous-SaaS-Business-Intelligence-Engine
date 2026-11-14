@@ -1,0 +1,10 @@
+{
+  "description": "Analyzes SaaS user behavior to predict churn, explain causes, recommend strategies, and enable managers to approve and execute retention actions.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

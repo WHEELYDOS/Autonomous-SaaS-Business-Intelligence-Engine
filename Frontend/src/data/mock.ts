@@ -560,6 +560,38 @@ export const recommendations: Recommendation[] = [
 
 export const recommendationById = Object.fromEntries(recommendations.map((r) => [r.id, r])) as Record<string, Recommendation>
 
+export function registerRecommendation(r: any) {
+  const id = r.recommendation_id || r.id
+  if (!id) return
+  if (recommendationById[id]) return
+
+  const mockRec: Recommendation = {
+    id,
+    title: r.title || r.justification || 'Retention Recommendation',
+    verb: r.verb || 'Apply recommendation',
+    segment: (r.segment || 'smb') as SegmentId,
+    type: (r.action_type === 'trigger_a_b_test' ? 'A/B test' : r.action_type === 'apply_stripe_discount' ? 'Pricing change' : 'Targeted email') as ActionType,
+    confidence: (r.confidence || (r.confidence_score >= 0.7 ? 'High' : r.confidence_score >= 0.4 ? 'Medium' : 'Low')) as Confidence,
+    narrative: r.justification || r.narrative || '',
+    accounts: r.accounts || Math.round(r.estimated_impact || 100),
+    mrrRetained: r.mrr_retained || r.mrrRetained || 0,
+    lift: r.lift ?? (r.estimated_impact ? Number(r.estimated_impact.toFixed(1)) : 0),
+    lo: r.lo ?? 0,
+    hi: r.hi ?? 0,
+    evidence: r.evidence || [],
+    preview: r.preview || {
+      kind: 'email',
+      subject: `Retention Offer for ${r.segment_label || 'segment'}`,
+      body: r.justification || '',
+      audience: `${r.segment_label || 'Target'} segment`,
+      sendTime: 'Immediately upon approval',
+    },
+  }
+
+  recommendations.push(mockRec)
+  recommendationById[id] = mockRec
+}
+
 /* ------------------------------------------------------------------ */
 /* Accounts                                                            */
 /* ------------------------------------------------------------------ */
