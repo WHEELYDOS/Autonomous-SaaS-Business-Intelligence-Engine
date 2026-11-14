@@ -1,6 +1,8 @@
-import { Link } from 'react-router'
-import { Compass } from 'lucide-react'
-import { Card, EmptyState } from '@/components/ui'
+import { Link } from "react-router"
+
+import { Compass } from "lucide-react"
+
+import { Card, EmptyState } from "@/components/ui"
 
 export default function NotFound() {
   return (
@@ -10,7 +12,10 @@ export default function NotFound() {
         title="This page doesn't exist"
         body="The link may be out of date."
         action={
-          <Link to="/" className="text-xs font-semibold text-accent hover:underline">
+          <Link
+            to="/"
+            className="text-xs font-semibold text-accent hover:underline"
+          >
             Go to Overview
           </Link>
         }

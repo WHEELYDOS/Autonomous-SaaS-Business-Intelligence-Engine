@@ -1,6 +1,8 @@
-import { RouterProvider } from 'react-router'
-import { AppStateProvider } from '@/state/AppState'
-import { router } from './routes'
+import { RouterProvider } from "react-router"
+
+import { AppStateProvider } from "@/state/AppState"
+
+import { router } from "./routes"
 
 export default function App() {
   return (

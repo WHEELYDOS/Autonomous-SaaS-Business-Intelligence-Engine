@@ -1,13 +1,13 @@
-import { useMemo, useState, type ReactNode } from 'react'
-import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
-import { Skeleton, cx } from './ui'
+import { useMemo, useState, type ReactNode } from "react"
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react"
+import { Skeleton, cx } from "./ui"
 
-export type Column<T> = {
+export type Column<T,> = {
   key: string
   header: ReactNode
   render: (row: T) => ReactNode
   sortValue?: (row: T) => number | string
-  align?: 'left' | 'right'
+  align?: "left" | "right"
   width?: string
   mono?: boolean
 }
@@ -31,7 +31,7 @@ export default function DataTable<T>({
   rowLabel?: (row: T) => string
   loading?: boolean
   empty?: ReactNode
-  defaultSort?: { key: string; dir: 'asc' | 'desc' }
+  defaultSort?: { key: string dir: "asc" | "desc" }
   caption: string
   dense?: boolean
 }) {
@@ -45,12 +45,16 @@ export default function DataTable<T>({
       const va = get(a)
       const vb = get(b)
       const r = va < vb ? -1 : va > vb ? 1 : 0
-      return sort.dir === 'asc' ? r : -r
+      return sort.dir === "asc" ? r : -r
     })
   }, [rows, sort, columns])
 
   const toggle = (key: string) => {
-    setSort((s) => (s?.key === key ? { key, dir: s.dir === 'desc' ? 'asc' : 'desc' } : { key, dir: 'desc' }))
+    setSort((s) =>
+      s?.key === key
+        ? { key, dir: s.dir === "desc" ? "asc" : "desc" }
+        : { key, dir: "desc" },
+    )
   }
 
   return (
@@ -58,7 +62,7 @@ export default function DataTable<T>({
       <table className="w-full border-collapse text-sm">
         <caption className="sr-only">{caption}</caption>
         <thead>
-          <tr className="border-b border-line">
+          <tr className="border-b border-line/50">
             {columns.map((c) => {
               const active = sort?.key === c.key
               return (
@@ -66,13 +70,43 @@ export default function DataTable<T>({
                   key={c.key}
                   scope="col"
                   style={{ width: c.width }}
-                  aria-sort={active ? (sort!.dir === 'asc' ? 'ascending' : 'descending') : c.sortValue ? 'none' : undefined}
-                  className={cx('h-10 px-4 text-xs font-medium whitespace-nowrap text-fg-2', c.align === 'right' ? 'text-right' : 'text-left')}
+                  aria-sort={
+                    active
+                      ? sort!.dir === "asc"
+                        ? "ascending"
+                        : "descending"
+                      : c.sortValue
+                        ? "none"
+                        : undefined
+                  }
+                  className={cx(
+                    "h-11 px-6 text-xs font-medium whitespace-nowrap text-fg-2",
+                    c.align === "right" ? "text-right" : "text-left",
+                  )}
                 >
                   {c.sortValue ? (
-                    <button type="button" onClick={() => toggle(c.key)} className={cx('inline-flex items-center gap-1 rounded hover:text-fg', active && 'text-fg')}>
+                    <button
+                      type="button"
+                      onClick={() => toggle(c.key)}
+                      className={cx(
+                        "group inline-flex items-center gap-1 rounded hover:text-fg cursor-pointer",
+                        active && "text-fg",
+                      )}
+                    >
                       {c.header}
-                      {active ? sort!.dir === 'asc' ? <ArrowUp size={12} aria-hidden /> : <ArrowDown size={12} aria-hidden /> : <ArrowUpDown size={12} aria-hidden className="opacity-50" />}
+                      {active ? (
+                        sort!.dir === "asc" ? (
+                          <ArrowUp size={12} aria-hidden />
+                        ) : (
+                          <ArrowDown size={12} aria-hidden />
+                        )
+                      ) : (
+                        <ArrowUpDown
+                          size={12}
+                          aria-hidden
+                          className="opacity-0 group-hover:opacity-50 transition-opacity"
+                        />
+                      )}
                     </button>
                   ) : (
                     c.header
@@ -85,10 +119,15 @@ export default function DataTable<T>({
         <tbody>
           {loading
             ? Array.from({ length: 5 }, (_, i) => (
-                <tr key={i} className="border-b border-line last:border-0">
+                <tr key={i} className="border-b border-line/30 last:border-0">
                   {columns.map((c) => (
-                    <td key={c.key} className="px-4 py-3">
-                      <Skeleton className="h-4" style={{ width: `${50 + ((i * 17 + c.key.length * 7) % 40)}%` }} />
+                    <td key={c.key} className="px-6 py-3.5">
+                      <Skeleton
+                        className="h-4"
+                        style={{
+                          width: `${50 + ((i * 17 + c.key.length * 7) % 40)}%`,
+                        }}
+                      />
                     </td>
                   ))}
                 </tr>
@@ -101,7 +140,7 @@ export default function DataTable<T>({
                     onRowClick
                       ? (e) => {
                           if (e.target !== e.currentTarget) return
-                          if (e.key === 'Enter' || e.key === ' ') {
+                          if (e.key === "Enter" || e.key === " ") {
                             e.preventDefault()
                             onRowClick(row)
                           }
@@ -109,11 +148,25 @@ export default function DataTable<T>({
                       : undefined
                   }
                   tabIndex={onRowClick ? 0 : undefined}
-                  aria-label={onRowClick && rowLabel ? rowLabel(row) : undefined}
-                  className={cx('border-b border-line last:border-0', onRowClick && 'cursor-pointer hover:bg-raised/60 focus-visible:bg-raised/60')}
+                  aria-label={
+                    onRowClick && rowLabel ? rowLabel(row) : undefined
+                  }
+                  className={cx(
+                    "border-b border-line/30 last:border-0 transition-colors",
+                    onRowClick &&
+                      "cursor-pointer hover:bg-raised/40 focus-visible:bg-raised/40",
+                  )}
                 >
                   {columns.map((c) => (
-                    <td key={c.key} className={cx('px-4 text-fg', dense ? 'py-2' : 'py-3', c.align === 'right' && 'num text-right', c.mono && 'font-mono text-xs')}>
+                    <td
+                      key={c.key}
+                      className={cx(
+                        "px-6 text-fg",
+                        dense ? "py-2.5" : "py-3.5",
+                        c.align === "right" && "num text-right",
+                        c.mono && "font-mono text-xs",
+                      )}
+                    >
                       {c.render(row)}
                     </td>
                   ))}

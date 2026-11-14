@@ -7,19 +7,23 @@
  * keeping the UI clean in the normal case.
  */
 
-import { useEffect, useState } from 'react'
-import { api, IS_MOCK_MODE } from '@/lib/api'
-import { AlertTriangle, CheckCircle2, Loader2, WifiOff } from 'lucide-react'
+import { useEffect, useState } from "react"
 
-type Conn = 'checking' | 'online' | 'offline' | 'mock'
+import { api, IS_MOCK_MODE } from "@/lib/api"
+
+import { AlertTriangle, CheckCircle2, Loader2, WifiOff } from "lucide-react"
+
+type Conn = "checking" | "online" | "offline" | "mock"
 
 export default function BackendStatus() {
-  const [conn, setConn] = useState<Conn>('checking')
-  const [detail, setDetail] = useState<string>('')
+  const [conn, setConn] = useState<Conn>("checking")
+
+  const [detail, setDetail] = useState<string>("")
 
   useEffect(() => {
     if (IS_MOCK_MODE) {
-      setConn('mock')
+      setConn("mock")
+
       return
     }
 
@@ -28,42 +32,67 @@ export default function BackendStatus() {
     async function check() {
       try {
         const s = await api.status()
-        setConn('online')
-        setDetail(s.loaded_at ? `Last pipeline run: ${new Date(s.loaded_at).toLocaleString()}` : 'Pipeline not yet run')
+
+        setConn("online")
+
+        setDetail(
+          s.loaded_at
+            ? `Last pipeline run: ${new Date(s.loaded_at).toLocaleString()}`
+            : "Pipeline not yet run",
+        )
       } catch (err: unknown) {
-        setConn('offline')
-        setDetail(err instanceof Error ? err.message : 'Cannot reach backend')
+        setConn("offline")
+
+        setDetail(err instanceof Error ? err.message : "Cannot reach backend")
       }
+
       // Re-check every 30 s
+
       timer = setTimeout(check, 30_000)
     }
 
     check()
+
     return () => clearTimeout(timer)
   }, [])
 
-  if (conn === 'online') return null // don't clutter the UI when all is well
+  if (conn === "online") return null // don't clutter the UI when all is well
 
-  const banners: Record<Conn, { bg: string; icon: React.ReactNode; text: string }> = {
+  const banners: Record<Conn, {
+    bg: string
+    icon: React.ReactNode
+    text: string
+  }> = {
     checking: {
-      bg: 'bg-surface border-line text-fg-2',
+      bg: "bg-surface border-line text-fg-2",
+
       icon: <Loader2 size={14} className="animate-spin text-accent" />,
-      text: 'Connecting to backend…',
+
+      text: "Connecting to backend…",
     },
+
     online: {
-      bg: 'bg-surface border-accent/30 text-fg',
+      bg: "bg-surface border-accent/30 text-fg",
+
       icon: <CheckCircle2 size={14} className="text-accent-strong" />,
-      text: 'Backend connected',
+
+      text: "Backend connected",
     },
+
     offline: {
-      bg: 'bg-risk-high/15 border-risk-high/35 text-fg',
+      bg: "bg-risk-high/15 border-risk-high/35 text-fg",
+
       icon: <WifiOff size={14} className="text-risk-high shrink-0" />,
+
       text: `Backend offline — showing static data. ${detail}`,
     },
+
     mock: {
-      bg: 'bg-surface border-line text-fg-2',
+      bg: "bg-surface border-line text-fg-2",
+
       icon: <AlertTriangle size={14} className="text-decision shrink-0" />,
-      text: 'Running in mock mode — no backend required. Set VITE_USE_MOCK=false to connect.',
+
+      text: "Running in mock mode — no backend required. Set VITE_USE_MOCK=false to connect.",
     },
   }
 
@@ -74,11 +103,11 @@ export default function BackendStatus() {
       role="status"
       aria-live="polite"
       className={`flex items-center gap-2 border-b px-4 py-1.5 text-xs font-medium ${bg}`}
-      style={{ backdropFilter: 'blur(4px)' }}
+      style={{ backdropFilter: "blur(4px)" }}
     >
       {icon}
       <span>{text}</span>
-      {conn === 'offline' && (
+      {conn === "offline" && (
         <a
           href="https://github.com#run-backend"
           target="_blank"
